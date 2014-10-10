@@ -1,28 +1,31 @@
 #!/bin/bash
 #set -e;
 
-APP=$2
 
 case "$1" in
+
   registry:login)
-	USERNAME=$2
-	PASSWORD=$3
-	SERVER=$4
-	docker login --username=$USERNAME --password=$PASSWORD $4
+	shift
+	echo "$@"	
+	docker login "$@"
+	;;
+
   registry:pull)
+
+	APP=$2
 	DOCKER_REGISTRY_IMAGE=$3
-        dokku deploy $APP;
-	docker pull $DOCKER_REGISTRY_IMAGE;
-	docker ps | grep "dokku/$APP" | awk '{print $1}' | xargs -r docker stop
-	docker rmi "dokku/$APP";
-	docker tag $DOCKER_REGISTRY_IMAGE "dokku/$APP";
-	dokku release $APP;
-	dokku deploy $APP;
+	docker pull $DOCKER_REGISTRY_IMAGE
+	#docker ps | grep "dokku/$APP" | awk '{print $1}' | xargs -r docker stop
+	docker tag $DOCKER_REGISTRY_IMAGE "dokku/$APP"
+	dokku release $APP
+	dokku deploy $APP
+	;;
 
   help)
+
     cat && cat<<EOF
-    registry:login <username> <password> <server>	Execute docker login with username, password and server arguments
-    registry:pull <app> <docker_registry_image>		Pull a buildstep built Docker image from a registry and deploy                         
+    registry:login				Execute docker login with remaining arguments
+    registry:pull <app> <docker_registry_image>	Pull a buildstep built Docker image from a registry and deploy                         
 EOF
     ;;
 esac
