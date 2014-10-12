@@ -1,46 +1,44 @@
 #!/bin/bash
 #set -e;
 
-
 case "$1" in
 
   registry:login)
-	shift
-	echo "$@"	
-	docker login "$@"
-	;;
+        shift
+        echo "$@"       
+        docker login "$@"
+        ;;
 
   registry:push)
-
-    UUID=uuidgen
-    git clone "$2" "$UUID"
-    cd "$UUID"
-    dokku create "$UUID"
-    tar c . | dokku build "$UUID"
-    docker tag "dokku/$UUID" "$3"
-    docker push "$3"
-    dokku delete "$UUID"
-    cd ..
-    rm -rf "$UUID"
-    ;;
+        mkdir -p /home/dokku/checkout
+        cd /home/dokku/checkout
+        UUID=$(uuidgen)
+        git clone "$2" "$UUID"
+        cd "$UUID"
+        dokku create "$UUID"
+        tar c . | dokku build "$UUID"
+        docker tag "dokku/$UUID" "$3"
+        docker push "$3"
+        dokku delete "$UUID"
+        rm -rf /home/dokku/checkout/"$UUID"
+        ;;
 
   registry:pull)
-
-	APP=$2
-	DOCKER_REGISTRY_IMAGE=$3
-	docker pull $DOCKER_REGISTRY_IMAGE
-	#docker ps | grep "dokku/$APP" | awk '{print $1}' | xargs -r docker stop
-	docker tag $DOCKER_REGISTRY_IMAGE "dokku/$APP"
-	dokku release $APP
-	dokku deploy $APP
-	;;
+        APP=$2
+        DOCKER_REGISTRY_IMAGE=$3
+        docker pull $DOCKER_REGISTRY_IMAGE
+        #docker ps | grep "dokku/$APP" | awk '{print $1}' | xargs -r docker stop
+        docker tag $DOCKER_REGISTRY_IMAGE "dokku/$APP"
+        dokku release $APP
+        dokku deploy $APP
+        ;;
 
   help)
 
     cat && cat<<EOF
-    registry:login				    Execute docker login with remaining arguments
-    registry:push <git_url> <docker_registry_image>	Pull a buildstep built Docker image from a registry and deploy
-    registry:pull <app> <docker_registry_image>	    Pull a buildstep built Docker image from a registry and deploy                         
+    registry:login                                  Execute docker login with remaining arguments
+    registry:push <git_url> <docker_registry_image> Pull a buildstep built Docker image from a registry and deploy
+    registry:pull <app> <docker_registry_image>     Pull a buildstep built Docker image from a registry and deploy                         
 EOF
     ;;
 esac
