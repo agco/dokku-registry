@@ -26,8 +26,7 @@ $ dokku help
 Workflow
 --------
 
-## on the build machine 
------------------------
+## Build machine 
 
 ```
 dokku registry:login —username=<username> —password=<password> —email=<email> <server>
@@ -42,8 +41,7 @@ dokku registry:push <git_url> <image_tag>
 This clones the code from a given git_url and builds it with buildstep 
 The resulting Docker is tagged as specified by the image_tag arg and pushed to the current logged-on Docker registry  
 
-## on the deploy target machine(s)
-----------------------------------
+## Deploy target(s)
 
 ```
 dokku registry:login —username=<username> —password=<password> —email=<email> <server>
