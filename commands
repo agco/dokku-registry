@@ -26,8 +26,8 @@ case "$1" in
   registry:pull)
         APP=$2
         DOCKER_REGISTRY_IMAGE=$3
+        dokku create $APP
         docker pull $DOCKER_REGISTRY_IMAGE
-        #docker ps | grep "dokku/$APP" | awk '{print $1}' | xargs -r docker stop
         docker tag $DOCKER_REGISTRY_IMAGE "dokku/$APP"
         dokku release $APP
         dokku deploy $APP
@@ -36,9 +36,9 @@ case "$1" in
   help)
 
     cat && cat<<EOF
-    registry:login                                  Perform a docker login ( all the remaining args are propagated )
-    registry:push <git_url> <docker_registry_image> Clone a git url, exec buildstep and push the Docker image to the current registry
-    registry:pull <app> <docker_registry_image>     Pull a buildstep built Docker image from the current registry and deploy
+    registry:login <docker login args>              Login to a docker registry
+    registry:push <git_url> <docker_registry_image> Clone a git url, exec buildstep and push the resulting Docker image to the logged on registry
+    registry:pull <app> <docker_registry_image>     Pull a Docker image (produced with buildstep) from the logged on registry and deploy
 EOF
     ;;
 esac
