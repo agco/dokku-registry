@@ -3,7 +3,7 @@ Docker Registry plugin for Dokku
 
 The Docker registry plugin for [Dokku](https://github.com/progrium/dokku) adds support for managing application releases as part of a continuous delivery workflow. 
 
-The idea is to build a Docker image once and deploy it to various environments (e.g staging ->  production), on Heroku similar functionality is offered through the [pipeline feature] (https://devcenter.heroku.com/articles/labs-pipelines). 
+The idea is to build a Docker image once and deploy it to various environments (e.g staging ->  production), on Heroku similar functionality is offered through the [pipeline feature](https://devcenter.heroku.com/articles/labs-pipelines). 
 
 Installation
 ------------
@@ -26,4 +26,32 @@ $ dokku help
 Workflow
 --------
 
-TODO
+## on the build machine 
+-----------------------
+
+```
+dokku registry:login —username=<username> —password=<password> —email=<email> <server>
+```
+This logs you in to the dockerhub registry
+Other registries can be specified as well with using the optional server arg
+Check the [docker login](https://docs.docker.com/reference/commandline/cli/#login) docs for more details  
+
+```
+dokku registry:push <git_url> <image_tag>
+```
+This clones the code from a given git_url and builds it with buildstep 
+The resulting Docker is tagged as specified by the image_tag arg and pushed to the current logged-on Docker registry  
+
+## on the deploy target machine(s)
+----------------------------------
+
+```
+dokku registry:login —username=<username> —password=<password> —email=<email> <server>
+```
+
+```
+dokku registry:pull <appname> <image_tag>
+```
+This pulls the image tag from the current logged-on registry and deploys it to Dokku
+The application will be auto-created in case it doesn't exist yet 
+
