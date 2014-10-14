@@ -53,6 +53,14 @@ dokku registry:pull <appname> <image_tag>
 This pulls the image tag from the current logged-on registry and deploys it to Dokku
 The application will be auto-created in case it doesn't exist yet 
 
+## Quick example
+
+```
+dokku registry:login --username=kristofsajdak --email=kristof.sajdak@mailinator.com --password=mypwd
+dokku registry:push https://github.com/heroku/node-js-getting-started.git kristofsajdak/node-js-getting-started:1.2.3 
+dokku registry:pull node-js-getting-started kristofsajdak/node-js-getting-started:1.2.3 
+```
+
 ## Set config variables prior to application start 
 
 There is an outstanding PR which can accomodate this : https://github.com/progrium/dokku/pull/599/files
