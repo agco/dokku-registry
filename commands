@@ -26,6 +26,7 @@ case "$1" in
   registry:pull)
         APP=$2
         DOCKER_REGISTRY_IMAGE=$3
+        mkdir -p "$DOKKU_ROOT/$APP"
         docker pull $DOCKER_REGISTRY_IMAGE
         docker tag $DOCKER_REGISTRY_IMAGE "dokku/$APP"
         dokku release $APP
