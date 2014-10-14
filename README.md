@@ -53,3 +53,12 @@ dokku registry:pull <appname> <image_tag>
 This pulls the image tag from the current logged-on registry and deploys it to Dokku
 The application will be auto-created in case it doesn't exist yet 
 
+## Set config variables prior to application start 
+
+There is an outstanding PR which can accomodate this : https://github.com/progrium/dokku/pull/599/files
+
+Here is a Dokku fork which has has created a branch merging a couple of PRs with the 599 included : https://github.com/neam/dokku/tree/awaiting-prs
+
+If you are looking for an example on how to bootstrap this have a look at this repo : https://github.com/agco-adm/dokku-provision-ALM-support
+
+
