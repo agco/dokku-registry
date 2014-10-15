@@ -55,6 +55,8 @@ The application will be auto-created in case it doesn't exist yet
 
 ## Quick example
 
+Note : This is just to demonstrate syntax, replace credentials and registry image tag with your own values  
+
 ```
 dokku registry:login --username=myusername --email=myemail@mailinator.com --password=mypwd
 dokku registry:push https://github.com/heroku/node-js-getting-started.git myusername/myapp:1.2.3 
