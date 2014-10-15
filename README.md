@@ -74,7 +74,7 @@ dokku config:set myapp FOO=BAR
 dokku registry:pull myapp myusername/myapp:1.2.3 
 ```
 
-Here is a Dokku fork which has created a branch merging a couple of PRs with the 599 included https://github.com/neam/dokku/tree/awaiting-prs
+Here is a Dokku fork which has created a branch merging a couple of PRs with the 599 (create command) included https://github.com/neam/dokku/tree/awaiting-prs
 
 An example on how to bootstrap this can be found here : https://github.com/agco-adm/dokku-provision-ALM-support
 
