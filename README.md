@@ -56,16 +56,25 @@ The application will be auto-created in case it doesn't exist yet
 ## Quick example
 
 ```
-dokku registry:login --username=kristofsajdak --email=kristof.sajdak@mailinator.com --password=mypwd
-dokku registry:push https://github.com/heroku/node-js-getting-started.git kristofsajdak/node-js-getting-started:1.2.3 
-dokku registry:pull node-js-getting-started kristofsajdak/node-js-getting-started:1.2.3 
+dokku registry:login --username=myusername --email=myemail@mailinator.com --password=mypwd
+dokku registry:push https://github.com/heroku/node-js-getting-started.git myusername/myapp:1.2.3 
+dokku registry:pull myapp myusername/myapp:1.2.3 
 ```
 
 ## Set config variables prior to application start 
 
 There is an outstanding PR which can accomodate this : https://github.com/progrium/dokku/pull/599/files
 
-Here is a Dokku fork which has created a branch merging a couple of PRs with the 599 included : https://github.com/neam/dokku/tree/awaiting-prs
+The workflow then looks something like the following
+
+```
+dokku registry:login --username=myusername --email=myemail@mailinator.com --password=mypwd
+dokku create myapp
+dokku config:set myapp FOO=BAR
+dokku registry:pull myapp myusername/myapp:1.2.3 
+```
+
+Here is a Dokku fork which has created a branch merging a couple of PRs with the 599 included https://github.com/neam/dokku/tree/awaiting-prs
 
 An example on how to bootstrap this can be found here : https://github.com/agco-adm/dokku-provision-ALM-support
 
