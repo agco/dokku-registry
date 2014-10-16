@@ -3,7 +3,7 @@ Docker Registry plugin for Dokku
 
 The Docker registry plugin for [Dokku](https://github.com/progrium/dokku) adds support for managing application releases as part of a continuous delivery workflow. 
 
-The idea is to build a Docker image once and deploy it to various environments (e.g staging ->  production), on Heroku similar functionality is offered through the [pipeline feature](https://devcenter.heroku.com/articles/labs-pipelines). 
+On Heroku similar functionality is offered by the [heroku-labs pipeline feature](https://devcenter.heroku.com/articles/labs-pipelines), which allows you to promote builds across multiple environments (staging -> production)
 
 Installation
 ------------
