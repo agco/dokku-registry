@@ -15,8 +15,8 @@ case "$1" in
         UUID=$(uuidgen)
         git clone "$2" "$UUID"
         cd "$UUID"
-        dokku create "$UUID"
-        tar c . | dokku build "$UUID"
+        dokku apps:create "$UUID"
+        tar c . | dokku build "$UUID" buildstep
         docker tag "dokku/$UUID" "$3"
         docker push "$3"
         dokku delete "$UUID"
