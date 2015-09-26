@@ -16,7 +16,13 @@ case "$1" in
         git clone "$2" "$UUID"
         cd "$UUID"
         dokku apps:create "$UUID"
-        tar c . | dokku build "$UUID" buildstep
+        DOCKERFILE=$(ls -l | grep Dockerfile | wc -l )
+        if [ $((DOCKERFILE)) -eq 1 ]; then
+            IMAGE_TYPE="dockerfile"
+        else
+            IMAGE_TYPE="herokuish"
+        fi
+        tar c . | dokku build "$UUID" "$IMAGE_TYPE"
         docker tag "dokku/$UUID" "$3"
         docker push "$3"
         dokku delete "$UUID"
