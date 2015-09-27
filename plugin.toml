@@ -1,0 +1,4 @@
+[plugin]
+description = "manage dokku application releases similar to heroku's pipeline"
+version = "1.0.0"
+[plugin.config]
