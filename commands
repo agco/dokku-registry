@@ -1,50 +1,56 @@
-#!/bin/bash
-#set -e;
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
 case "$1" in
-
   registry:login)
-        shift
-        echo "$@"       
-        docker login "$@"
-        ;;
+    shift
+    echo "$@"
+    docker login "$@"
+    ;;
 
   registry:push)
-        mkdir -p /home/dokku/checkout
-        cd /home/dokku/checkout
-        UUID=$(uuidgen)
-        git clone "$2" "$UUID"
-        cd "$UUID"
-        dokku apps:create "$UUID"
-        DOCKERFILE=$(ls -l | grep Dockerfile | wc -l )
-        if [ $((DOCKERFILE)) -eq 1 ]; then
-            IMAGE_TYPE="dockerfile"
-        else
-            IMAGE_TYPE="herokuish"
-        fi
-        tar c . | dokku build "$UUID" "$IMAGE_TYPE"
-        docker tag "dokku/$UUID" "$3"
-        docker push "$3"
-        dokku delete "$UUID"
-        rm -rf /home/dokku/checkout/"$UUID"
-        ;;
+    mkdir -p /home/dokku/checkout
+    cd /home/dokku/checkout
+    UUID=$(uuidgen)
+    git clone "$2" "$UUID"
+    cd "$UUID"
+    dokku apps:create "$UUID"
+    if [[ -f "$UUID/Dockerfile" ]]; then
+      IMAGE_TYPE="dockerfile"
+    else
+      IMAGE_TYPE="herokuish"
+    fi
+    tar c . | dokku build "$UUID" "$IMAGE_TYPE"
+    docker tag "dokku/$UUID" "$3"
+    docker push "$3"
+    dokku delete "$UUID"
+    rm -rf /home/dokku/checkout/"$UUID"
+    ;;
 
   registry:pull)
-        APP=$2
-        DOCKER_REGISTRY_IMAGE=$3
-        mkdir -p "$DOKKU_ROOT/$APP"
-        docker pull $DOCKER_REGISTRY_IMAGE
-        docker tag $DOCKER_REGISTRY_IMAGE "dokku/$APP"
-        dokku release $APP
-        dokku deploy $APP
-        ;;
+    APP=$2; DOCKER_REGISTRY_IMAGE=$3
+    mkdir -p "$DOKKU_ROOT/$APP"
+    docker pull "$DOCKER_REGISTRY_IMAGE"
+    docker tag "$DOCKER_REGISTRY_IMAGE" "dokku/$APP"
+    dokku release "$APP"
+    dokku deploy "$APP"
+    ;;
 
-  help)
-
-    cat && cat<<EOF
-    registry:login <docker login args>              Login to a docker registry
-    registry:push <git_url> <docker_registry_image> Clone a git url, exec buildstep and push the resulting Docker image to the logged on registry
-    registry:pull <app> <docker_registry_image>     Pull a Docker image (produced with buildstep) from the logged on registry and deploy
+  help | registry:help)
+    HELP=$(cat<<EOF
+    registry:login <docker login args>, Login to a docker registry
+    registry:push <git_url> <docker_registry_image>, Clone a git url, exec buildstep and push the resulting Docker image to the logged on registry
+    registry:pull <app> <docker_registry_image>, Pull a Docker image (produced with buildstep) from the logged on registry and deploy
 EOF
+)
+    if [[ -n $DOKKU_API_VERSION ]]; then
+      echo "$HELP"
+    else
+      cat && echo "$HELP"
+    fi
+    ;;
+
+  *)
+    exit $DOKKU_NOT_IMPLEMENTED_EXIT
     ;;
 esac
