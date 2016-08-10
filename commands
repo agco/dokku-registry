@@ -32,8 +32,7 @@ case "$1" in
     mkdir -p "$DOKKU_ROOT/$APP"
     docker pull "$DOCKER_REGISTRY_IMAGE"
     docker tag "$DOCKER_REGISTRY_IMAGE" "dokku/$APP"
-    dokku release "$APP"
-    dokku deploy "$APP"
+    dokku tags:deploy "$APP"
     ;;
 
   help | registry:help)
